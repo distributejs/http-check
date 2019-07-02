@@ -1,4 +1,10 @@
-import { ClientHttp2Session, connect, Http2SecureServer, IncomingHttpHeaders } from "http2";
+import {
+    ClientHttp2Session,
+    connect,
+    Http2SecureServer,
+    IncomingHttpHeaders,
+    OutgoingHttpHeaders,
+} from "http2";
 
 import { AddressInfo } from "net";
 
@@ -27,21 +33,18 @@ export class HttpCheck {
         });
     }
 
-    public async send(method: string, url: string) {
+    public async send(headers: OutgoingHttpHeaders) {
         return await new Promise((resolve, reject) => {
-            const request = this.clientSession.request({
-                ":method": method,
-                ":path": url,
-            });
+            const request = this.clientSession.request(headers);
 
             let data = "";
 
-            let headers: IncomingHttpHeaders;
+            let responseHeaders: IncomingHttpHeaders;
 
             request.on("end", () => {
                 resolve({
                     data,
-                    headers,
+                    headers: responseHeaders,
                 });
             });
 
@@ -53,8 +56,8 @@ export class HttpCheck {
                 data += chunk;
             });
 
-            request.on("response", (responseHeaders) => {
-                headers = responseHeaders;
+            request.on("response", (incomingHeaders) => {
+                responseHeaders = incomingHeaders;
             });
         });
     }
