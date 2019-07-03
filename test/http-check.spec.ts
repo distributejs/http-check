@@ -2,7 +2,12 @@ import * as chai from "chai";
 
 import { readFileSync } from "fs";
 
-import { createSecureServer, Http2ServerRequest, Http2ServerResponse, OutgoingHttpHeaders } from "http2";
+import {
+    createSecureServer,
+    Http2SecureServer,
+    Http2ServerRequest,
+    Http2ServerResponse,
+} from "http2";
 
 import { join } from "path";
 
@@ -12,7 +17,7 @@ describe("Class HttpCheck", () => {
     describe("Given that the server is an HTTP secure server", () => {
         let httpCheck: HttpCheck;
 
-        let server;
+        let server: Http2SecureServer;
 
         before(async () => {
             server = createSecureServer({
@@ -149,6 +154,34 @@ describe("Class HttpCheck", () => {
                         chai.expect(capturedRequest.headers.accept).eq(sampleHeaderAccept);
 
                         chai.expect(capturedRequest.headers["accept-encoding"]).eq(sampleHeaderAcceptEncoding);
+                    });
+            });
+
+            it("passes data to the request handler", async () => {
+                const sampleMethod = "POST";
+
+                const sampleUrl = "/tags";
+
+                const sampleData = JSON.stringify({
+                    text: "Bug",
+                });
+
+                let capturedData = "";
+
+                server.on("request", (request: Http2ServerRequest, response: Http2ServerResponse) => {
+                    request.stream.on("data", (chunk) => {
+                        capturedData += chunk;
+                    });
+
+                    response.end();
+                });
+
+                return httpCheck.send({
+                    ":method": sampleMethod,
+                    ":path": sampleUrl,
+                }, sampleData)
+                    .then(() => {
+                        chai.expect(capturedData).eq(sampleData);
                     });
             });
 

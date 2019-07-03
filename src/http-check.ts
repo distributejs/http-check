@@ -8,6 +8,12 @@ import {
 
 import { AddressInfo } from "net";
 
+interface HttpCheckResponse {
+    data: string;
+
+    headers: IncomingHttpHeaders;
+}
+
 export class HttpCheck {
     protected clientSession: ClientHttp2Session;
 
@@ -33,17 +39,41 @@ export class HttpCheck {
         });
     }
 
-    public async send(headers: OutgoingHttpHeaders) {
-        return await new Promise((resolve, reject) => {
-            const request = this.clientSession.request(headers);
+    public async send(headers: OutgoingHttpHeaders, data?: string): Promise<HttpCheckResponse>;
+    public async send(headers: OutgoingHttpHeaders): Promise<HttpCheckResponse> {
+        let requestData: string;
 
-            let data = "";
+        let endStream: boolean = true;
+
+        if (arguments.length >= 2) {
+            switch (typeof arguments[1]) {
+                case "string":
+                    requestData = arguments[1];
+
+                    endStream = false;
+
+                    break;
+            }
+        }
+
+        return await new Promise((resolve, reject) => {
+            const request = this.clientSession.request(headers, {
+                endStream,
+            });
+
+            if (requestData) {
+                request.write(requestData);
+
+                request.end();
+            }
+
+            let responseData = "";
 
             let responseHeaders: IncomingHttpHeaders;
 
             request.on("end", () => {
                 resolve({
-                    data,
+                    data: responseData,
                     headers: responseHeaders,
                 });
             });
@@ -53,7 +83,7 @@ export class HttpCheck {
             });
 
             request.on("data", (chunk) => {
-                data += chunk;
+                responseData += chunk;
             });
 
             request.on("response", (incomingHeaders) => {
