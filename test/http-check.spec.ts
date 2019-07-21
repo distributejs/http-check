@@ -42,7 +42,7 @@ describe("Class HttpCheck", () => {
             it("passes method to the request handler", async () => {
                 const sampleMethod = "GET";
 
-                const sampleUrl = "/tags";
+                const sampleUrl = "/customers/543/favourites";
 
                 let capturedRequest: Http2ServerRequest;
 
@@ -64,7 +64,7 @@ describe("Class HttpCheck", () => {
             it("passes url to the request handler", async () => {
                 const sampleMethod = "GET";
 
-                const sampleUrl = "/tags";
+                const sampleUrl = "/customers/543/favourites";
 
                 let capturedRequest: Http2ServerRequest;
 
@@ -86,7 +86,7 @@ describe("Class HttpCheck", () => {
             it("passes url with query parameters to the request handler", async () => {
                 const sampleMethod = "GET";
 
-                const sampleUrl = "/tags?text=User story";
+                const sampleUrl = "/customers/543/favourites?q=dried fruit";
 
                 let capturedRequest: Http2ServerRequest;
 
@@ -108,7 +108,7 @@ describe("Class HttpCheck", () => {
             it("passes encoded url with query parameters to the request handler", async () => {
                 const sampleMethod = "GET";
 
-                const sampleUrl = encodeURI("/tags?text=User story");
+                const sampleUrl = encodeURI("/customers/543/favourites?text=dried fruit");
 
                 let capturedRequest: Http2ServerRequest;
 
@@ -130,7 +130,7 @@ describe("Class HttpCheck", () => {
             it("passes headers to the request handler", async () => {
                 const sampleMethod = "GET";
 
-                const sampleUrl = "/tags";
+                const sampleUrl = "/customers/543/favourites";
 
                 const sampleHeaderAccept = "application/json";
 
@@ -160,10 +160,10 @@ describe("Class HttpCheck", () => {
             it("passes data to the request handler", async () => {
                 const sampleMethod = "POST";
 
-                const sampleUrl = "/tags";
+                const sampleUrl = "/customers/543/favourites";
 
                 const sampleData = JSON.stringify({
-                    text: "Bug",
+                    productId: 2558,
                 });
 
                 let capturedData = "";
@@ -188,13 +188,14 @@ describe("Class HttpCheck", () => {
             it("returns status code and data set in the request handler", async () => {
                 const sampleMethod = "GET";
 
-                const sampleUrl = "/tags/23";
+                const sampleUrl = "/customers/543/favourites/1";
 
                 const sampleStatusCode = 200;
 
                 const sampleResponseData = JSON.stringify({
-                    id: 23,
-                    text: "User story",
+                    customerId: 543,
+                    key: 1,
+                    productId: 2558,
                 });
 
                 server.on("request", (request: Http2ServerRequest, response: Http2ServerResponse) => {
