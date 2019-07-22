@@ -56,7 +56,7 @@ export class HttpCheck {
             }
         }
 
-        return await new Promise((resolve, reject) => {
+        return new Promise((resolve, reject) => {
             const request = this.clientSession.request(headers, {
                 endStream,
             });
