@@ -23,7 +23,7 @@ export class HttpCheck {
         this.server = server;
     }
 
-    public async end() {
+    public async end(): Promise<void> {
         return new Promise((resolve, reject) => {
             this.clientSession.close(() => {
                 this.server.close((err) => {
@@ -92,7 +92,7 @@ export class HttpCheck {
         });
     }
 
-    public async start() {
+    public async start(): Promise<void> {
         if (this.server.listening) {
             this.server.close();
         }
