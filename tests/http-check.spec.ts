@@ -34,7 +34,7 @@ describe("Class HttpCheck", () => {
             await httpCheck.end();
         });
 
-        describe("When sending a request", () => {
+        describe("When a request is made", () => {
             afterEach(() => {
                 server.removeAllListeners("request");
             });
