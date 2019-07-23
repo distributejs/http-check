@@ -14,7 +14,7 @@ import { join } from "path";
 import { HttpCheck } from "../src/http-check";
 
 describe("Class HttpCheck", () => {
-    describe("Given that the server is an HTTP secure server", () => {
+    describe("Given that the server is a Http2SecureServer", () => {
         let httpCheck: HttpCheck;
 
         let server: Http2SecureServer;
