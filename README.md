@@ -166,7 +166,7 @@ describe("CustomerFavourites", () => {
 
 ## Working with the project repository
 
-### Generating test ssh keys
+### Generating test cert and key files
 To generate test cert and key files, essential for running tests, execute the following command in the module root directory:
 ```
 npx ./scripts/generate-test-cert-and-key.js
