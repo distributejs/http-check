@@ -23,7 +23,6 @@
         "typescript": "^3.5.2"
     },
     "scripts": {
-        "install": "npx ./scripts/generate-test-cert-and-key.js",
         "test": "mocha --recursive -r ts-node/register -r source-map-support/register"
     }
 }
