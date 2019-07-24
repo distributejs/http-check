@@ -2,7 +2,14 @@
     "name": "@distributejs/http-check",
     "version": "0.1.0",
     "description": "Utility for checking HTTP server requests and responses in Node.js",
-    "keywords": [ "HTTP", "HTTP/2", "request", "response", "server", "testing" ],
+    "keywords": [
+        "HTTP",
+        "HTTP/2",
+        "request",
+        "response",
+        "server",
+        "testing"
+    ],
     "repository": {
         "type": "git",
         "url": "https://github.com/distributejs/http-check"
