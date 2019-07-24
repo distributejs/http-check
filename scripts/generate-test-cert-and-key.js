@@ -6,8 +6,14 @@ const path = require("path");
 
 const selfsigned = require("selfsigned");
 
-var pem = selfsigned.generate([{ name: 'commonName', value: 'localhost' }], { days: 365 });
+const certFilePath = path.join(__dirname, "../tests/fixtures/ssh/cert.pem");
 
-fs.writeFileSync(path.join(__dirname, "../tests/fixtures/ssh/cert.pem"), pem.cert);
+const keyFilePath = path.join(__dirname, "../tests/fixtures/ssh/key.pem");
 
-fs.writeFileSync(path.join(__dirname, "../tests/fixtures/ssh/key.pem"), pem.private);
+if (!fs.existsSync(certFilePath) || !fs.existsSync(keyFilePath)) {
+    const pem = selfsigned.generate([{ name: 'commonName', value: 'localhost' }], { days: 365 });
+    
+    fs.writeFileSync(certFilePath, pem.cert);
+    
+    fs.writeFileSync(keyFilePath, pem.private);
+}

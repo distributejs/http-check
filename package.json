@@ -32,6 +32,7 @@
         "typescript": "^3.5.2"
     },
     "scripts": {
+        "pretest": "npx ./scripts/generate-test-cert-and-key.js",
         "test": "nyc mocha -r ts-node/register -r source-map-support/register --recursive"
     }
 }

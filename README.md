@@ -167,7 +167,4 @@ describe("CustomerFavourites", () => {
 ## Working with the project repository
 
 ### Generating test cert and key files
-To generate test cert and key files, essential for running tests, execute the following command in the module root directory:
-```
-npx ./scripts/generate-test-cert-and-key.js
-```
+Test cert and key files, necessary for running tests, are not included in the repository and need to be generated. They are automatically generated as part of "pretest" script. If you usually run tests using a different method than calling ```npm test```, run ```npm test``` once to generate these files. 
