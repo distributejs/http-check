@@ -1,0 +1,12 @@
+{
+    "all": true,
+    "extension": [
+        ".ts"
+    ],
+    "include": [
+        "src/**/*"
+    ],
+    "reporter": [
+        "text"
+    ]
+}

@@ -1,5 +1,7 @@
 .devcontainer
 
+.nyc_output
+
 .vscode
 
 dist
