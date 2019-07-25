@@ -1,0 +1,16 @@
+version: 2
+jobs:
+  test:
+    docker: 
+      image: circleci/node:12.4.0
+      working_directory: ~/projects/distributejs/http-check
+      steps:
+        - checkout
+        - restore_cache:
+            key: dependency-cache-{{ checksum "package.json" }}
+        - run: npm install
+        - save_cache:
+            key: dependency-cache-{{ checksum "package.json" }}
+            paths:
+              - ./node_modules
+        - run: npm test
