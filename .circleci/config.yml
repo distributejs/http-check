@@ -2,7 +2,7 @@ version: 2
 jobs:
   test:
     docker: 
-      image: circleci/node:12.4.0
+      - image: circleci/node:12.4.0
     working_directory: ~/projects/distributejs/http-check
     steps:
       - checkout
