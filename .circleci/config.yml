@@ -16,9 +16,14 @@ jobs:
           paths:
             - ./node_modules
       - run: npm test
+      - persist_to_workspace:
+          root: ~/projects/distributejs/http-check
+          paths: .
   publish:
     <<: *defaults
     steps:
+      - attach_workspace:
+          at: ~/projects/distributejs/http-check/
       - run:
           name: Authenticate with registry
           command: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/projects/distributejs/http-check/.npmrc
@@ -36,3 +41,5 @@ workflows:
         filters:
           tags:
             only: /^v.*/
+          branches:
+            only: master
