@@ -16,7 +16,7 @@ jobs:
           paths:
             - ./node_modules
       - run: npm test
-  deploy:
+  publish:
     <<: *defaults
     steps:
       - run:
@@ -27,14 +27,14 @@ jobs:
           command: npm publish --access public
 workflows:
   version: 2
-  test-and-deploy:
+  test-and-publish:
     jobs:
     - test
-    - deploy:
-      requires:
-        - test
-      filters:
-        tags:
-          only: /^v.*/
-        branches:
-          ignore: /.*/
+    - publish:
+        requires:
+          - test
+        filters:
+          tags:
+            only: /^v.*/
+          branches:
+            ignore: /.*/
