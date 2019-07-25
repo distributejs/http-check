@@ -24,7 +24,7 @@ jobs:
           command: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/projects/distributejs/http-check/.npmrc
       - run:
           name: Publish package
-          command: npm publish
+          command: npm publish --access public
 workflows:
   version: 2
   test-and-deploy:
