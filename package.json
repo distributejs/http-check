@@ -18,6 +18,9 @@
     "license": "MIT",
     "main": "./dist/index.js",
     "types": "./dist/index.d.ts",
+    "files": [
+        "./dist"
+    ],
     "devDependencies": {
         "@types/chai": "^4.1.7",
         "@types/mocha": "^5.2.7",
@@ -32,6 +35,7 @@
         "typescript": "^3.5.2"
     },
     "scripts": {
+        "prepublishOnly": "tsc",
         "pretest": "npx ./scripts/generate-test-cert-and-key.js",
         "test": "nyc mocha -r ts-node/register -r source-map-support/register --recursive"
     }

@@ -1,9 +1,11 @@
 version: 2
+defaults: &defaults
+  working_directory: ~/projects/distributejs/http-check
+  docker:
+    - image: circleci/node:12.4.0
 jobs:
   test:
-    docker: 
-      - image: circleci/node:12.4.0
-    working_directory: ~/projects/distributejs/http-check
+    <<: *defaults
     steps:
       - checkout
       - restore_cache:
@@ -14,8 +16,25 @@ jobs:
           paths:
             - ./node_modules
       - run: npm test
+  deploy:
+    <<: *defaults
+    steps:
+      - run:
+          name: Authenticate with registry
+          command: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/projects/distributejs/http-check/.npmrc
+      - run:
+          name: Publish package
+          command: npm publish
 workflows:
   version: 2
-  workflow:
+  test-and-deploy:
     jobs:
     - test
+    - deploy:
+      requires:
+        - test
+      filters:
+        tags:
+          only: /^v.*/
+        branches:
+          ignore: /.*/
