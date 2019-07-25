@@ -8,6 +8,6 @@ dist
 
 node_modules
 
-/tests/fixtures/ssh
+/tests/fixtures/ssh/*
 
 !/tests/fixtures/ssh/.gitkeep
