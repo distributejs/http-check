@@ -16,10 +16,10 @@
     },
     "author": "Marek Maciusowicz",
     "license": "MIT",
-    "main": "./dist/index.js",
-    "types": "./dist/index.d.ts",
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
     "files": [
-        "./dist"
+        "dist"
     ],
     "devDependencies": {
         "@types/chai": "^4.1.7",
@@ -35,8 +35,8 @@
         "typescript": "^3.5.2"
     },
     "scripts": {
+        "prepublishOnly": "tsc",
         "pretest": "npx ./scripts/generate-test-cert-and-key.js",
-        "test": "nyc mocha -r ts-node/register -r source-map-support/register --recursive",
-        "transpile": "tsc"
+        "test": "nyc mocha -r ts-node/register -r source-map-support/register --recursive"
     }
 }
