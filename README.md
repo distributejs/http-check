@@ -165,7 +165,7 @@ describe("CustomerFavourites", () => {
 });
 ```
 
-## Working with the project repository
+## Developers
 
 ### Generating test cert and key files
 Test cert and key files, necessary for running tests, are not included in the repository and need to be generated. They are automatically generated as part of "pretest" script. If you usually run tests using a different method than calling ```npm test```, run ```npm test``` once to generate these files. 
