@@ -1,3 +1,7 @@
 {
-    "spec": "**/tests/*spec.ts"
+    "require": [
+        "ts-node/register",
+        "source-map-support/register"
+    ],
+    "spec": "**/tests/*.spec.ts"
 }
