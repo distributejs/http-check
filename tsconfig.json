@@ -1,7 +1,6 @@
 {
     "compilerOptions": {
         "alwaysStrict": true,
-        "baseUrl": ".",
         "declaration": true,
         "module": "commonjs",
         "moduleResolution": "node",
