@@ -1,6 +1,6 @@
 {
     "name": "@distributejs/http-check",
-    "version": "0.1.5",
+    "version": "0.1.6",
     "description": "Utility for checking HTTP server requests and responses in Node.js",
     "keywords": [
         "http",
@@ -24,19 +24,19 @@
         "dist"
     ],
     "dependencies": {
-        "@types/node": "^12.6.8"
+        "@types/node": "^12.12.24"
     },
     "devDependencies": {
-        "@types/chai": "^4.1.7",
+        "@types/chai": "^4.2.7",
         "@types/mocha": "^5.2.7",
         "chai": "^4.2.0",
-        "mocha": "^6.2.0",
+        "mocha": "^6.2.2",
         "nyc": "^14.1.1",
-        "selfsigned": "^1.10.4",
-        "source-map-support": "^0.5.12",
-        "ts-node": "^8.3.0",
-        "tslint": "^5.18.0",
-        "typescript": "^3.5.2"
+        "selfsigned": "^1.10.7",
+        "source-map-support": "^0.5.16",
+        "ts-node": "^8.6.1",
+        "tslint": "^5.20.1",
+        "typescript": "^3.7.4"
     },
     "scripts": {
         "prepublishOnly": "tsc",
