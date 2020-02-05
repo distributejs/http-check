@@ -1,15 +1,15 @@
-# DistributeJS HttpCheck
+# DistributeJS http-check
 [![CircleCI](https://circleci.com/gh/distributejs/http-check.svg?style=svg)](https://circleci.com/gh/distributejs/http-check)
 
 ## Introduction
-DistributeJS HttpCheck is a utility for checking HTTP server requests and responses in Node.js.
+DistributeJS http-check is a utility for checking HTTP server requests and responses in Node.js.
 
 ## Supported server types
-DistributeJS HttpCheck currently supports checks on:
+DistributeJS http-check currently supports checks on:
 - Http2SecureServer
 
 ## Usage
-Initialise HttpCheck passing an instance of Http2SecureServer, like so:
+Create a new instance of HttpCheck, passing an instance of Http2SecureServer, like so:
 ```
 const httpCheck = new HttpCheck(server);
 ```
