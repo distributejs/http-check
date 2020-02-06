@@ -1,0 +1,25 @@
+{
+    "extends": [
+        "eslint:recommended",
+        "plugin:@typescript-eslint/eslint-recommended",
+        "plugin:@typescript-eslint/recommended",
+        "plugin:@typescript-eslint/recommended-requiring-type-checking"
+    ],
+    "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+        "project": "./tsconfig.json"
+    },
+    "plugins": [
+        "@typescript-eslint"
+    ],
+    "rules": {
+        "comma-spacing": "warn",
+        "eol-last": "warn",
+        "indent": ["warn", 4, { "SwitchCase": 1 }],
+        "no-trailing-spaces": "warn",
+        "space-before-function-paren": ["warn", "never"],
+        "space-before-blocks": "warn",
+        "space-in-parens": "warn",
+        "space-infix-ops": "warn"
+    }
+}
