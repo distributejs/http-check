@@ -1,17 +1,10 @@
-import * as chai from "chai";
-
 import { readFileSync } from "fs";
 
-import {
-    createSecureServer,
-    Http2SecureServer,
-    Http2ServerRequest,
-    Http2ServerResponse,
-} from "http2";
+import { createSecureServer, Http2SecureServer, Http2ServerRequest, Http2ServerResponse } from "http2";
 
 import { join } from "path";
 
-import { HttpCheck } from "../src/http-check";
+import { HttpCheck } from "../http-check";
 
 describe("Class HttpCheck", () => {
     describe("Given that the server is a Http2SecureServer", () => {
@@ -19,10 +12,10 @@ describe("Class HttpCheck", () => {
 
         let server: Http2SecureServer;
 
-        before(async () => {
+        beforeAll(async() => {
             server = createSecureServer({
-                cert: readFileSync(join(__dirname, "/fixtures/ssh/cert.pem")),
-                key: readFileSync(join(__dirname, "/fixtures/ssh/key.pem")),
+                cert: readFileSync(join(__dirname, "../../ssl/cert.pem")),
+                key: readFileSync(join(__dirname, "../../ssl/key.pem")),
             });
 
             httpCheck = new HttpCheck(server);
@@ -30,7 +23,7 @@ describe("Class HttpCheck", () => {
             await httpCheck.start();
         });
 
-        after(async () => {
+        afterAll(async() => {
             await httpCheck.end();
         });
 
@@ -39,7 +32,7 @@ describe("Class HttpCheck", () => {
                 server.removeAllListeners("request");
             });
 
-            it("passes method to the request handler", async () => {
+            test("passes method to the request handler", async() => {
                 const sampleMethod = "GET";
 
                 const sampleUrl = "/customers/543/favourites";
@@ -57,11 +50,11 @@ describe("Class HttpCheck", () => {
                     ":path": sampleUrl,
                 })
                     .then(() => {
-                        chai.expect(capturedRequest.method).eq(sampleMethod);
+                        expect(capturedRequest.method).toEqual(sampleMethod);
                     });
             });
 
-            it("passes url to the request handler", async () => {
+            test("passes url to the request handler", async() => {
                 const sampleMethod = "GET";
 
                 const sampleUrl = "/customers/543/favourites";
@@ -79,11 +72,11 @@ describe("Class HttpCheck", () => {
                     ":path": sampleUrl,
                 })
                     .then(() => {
-                        chai.expect(capturedRequest.url).eq(sampleUrl);
+                        expect(capturedRequest.url).toEqual(sampleUrl);
                     });
             });
 
-            it("passes url with query parameters to the request handler", async () => {
+            test("passes url with query parameters to the request handler", async() => {
                 const sampleMethod = "GET";
 
                 const sampleUrl = "/customers/543/favourites?q=dried fruit";
@@ -101,11 +94,11 @@ describe("Class HttpCheck", () => {
                     ":path": sampleUrl,
                 })
                     .then(() => {
-                        chai.expect(capturedRequest.url).eq(sampleUrl);
+                        expect(capturedRequest.url).toEqual(sampleUrl);
                     });
             });
 
-            it("passes encoded url with query parameters to the request handler", async () => {
+            test("passes encoded url with query parameters to the request handler", async() => {
                 const sampleMethod = "GET";
 
                 const sampleUrl = encodeURI("/customers/543/favourites?text=dried fruit");
@@ -123,11 +116,11 @@ describe("Class HttpCheck", () => {
                     ":path": sampleUrl,
                 })
                     .then(() => {
-                        chai.expect(capturedRequest.url).eq(sampleUrl);
+                        expect(capturedRequest.url).toEqual(sampleUrl);
                     });
             });
 
-            it("passes headers to the request handler", async () => {
+            test("passes headers to the request handler", async() => {
                 const sampleMethod = "GET";
 
                 const sampleUrl = "/customers/543/favourites";
@@ -151,13 +144,13 @@ describe("Class HttpCheck", () => {
                     "accept-encoding": sampleHeaderAcceptEncoding,
                 })
                     .then(() => {
-                        chai.expect(capturedRequest.headers.accept).eq(sampleHeaderAccept);
+                        expect(capturedRequest.headers.accept).toEqual(sampleHeaderAccept);
 
-                        chai.expect(capturedRequest.headers["accept-encoding"]).eq(sampleHeaderAcceptEncoding);
+                        expect(capturedRequest.headers["accept-encoding"]).toEqual(sampleHeaderAcceptEncoding);
                     });
             });
 
-            it("passes data to the request handler", async () => {
+            test("passes data to the request handler", async() => {
                 const sampleMethod = "POST";
 
                 const sampleUrl = "/customers/543/favourites";
@@ -181,11 +174,11 @@ describe("Class HttpCheck", () => {
                     ":path": sampleUrl,
                 }, sampleData)
                     .then(() => {
-                        chai.expect(capturedData).eq(sampleData);
+                        expect(capturedData).toEqual(sampleData);
                     });
             });
 
-            it("returns status code and data set in the request handler", async () => {
+            test("returns status code and data set in the request handler", async() => {
                 const sampleMethod = "GET";
 
                 const sampleUrl = "/customers/543/favourites/1";
@@ -209,12 +202,11 @@ describe("Class HttpCheck", () => {
                     ":path": sampleUrl,
                 })
                     .then((response) => {
-                        chai.expect(response)
-                            .property("headers")
-                            .property(":status", sampleStatusCode);
+                        expect(response)
+                            .toHaveProperty("headers.:status", sampleStatusCode);
 
-                        chai.expect(response)
-                            .property("data", sampleResponseData);
+                        expect(response)
+                            .toHaveProperty("data", sampleResponseData);
                     });
             });
         });

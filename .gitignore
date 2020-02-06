@@ -1,13 +1,11 @@
 .devcontainer
 
-.nyc_output
-
 .vscode
 
 dist
 
 node_modules
 
-/tests/fixtures/ssh/*
+/ssl/*
 
-!/tests/fixtures/ssh/.gitkeep
+!/ssl/.gitkeep
