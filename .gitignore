@@ -6,6 +6,6 @@ dist
 
 node_modules
 
-/ssh/*
+/ssl/*
 
-!/ssh/.gitkeep
+!/ssl/.gitkeep

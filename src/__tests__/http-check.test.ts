@@ -14,8 +14,8 @@ describe("Class HttpCheck", () => {
 
         beforeAll(async() => {
             server = createSecureServer({
-                cert: readFileSync(join(__dirname, "../../ssh/cert.pem")),
-                key: readFileSync(join(__dirname, "../../ssh/key.pem")),
+                cert: readFileSync(join(__dirname, "../../ssl/cert.pem")),
+                key: readFileSync(join(__dirname, "../../ssl/key.pem")),
             });
 
             httpCheck = new HttpCheck(server);
