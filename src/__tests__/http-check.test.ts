@@ -1,13 +1,13 @@
 import { readFileSync } from "fs";
 
-import { createSecureServer, Http2SecureServer, Http2ServerRequest, Http2ServerResponse } from "http2";
+import { createSecureServer, Http2SecureServer } from "http2";
 
 import { join } from "path";
 
 import { HttpCheck } from "../http-check";
 
 describe("Class HttpCheck", () => {
-    describe("Given that the server is a Http2SecureServer", () => {
+    describe("Provided a server that is an instance of Http2SecureServer", () => {
         let httpCheck: HttpCheck;
 
         let server: Http2SecureServer;
@@ -27,187 +27,140 @@ describe("Class HttpCheck", () => {
             await httpCheck.end();
         });
 
-        describe("When a request is made", () => {
+        describe("On calling send()", () => {
             afterEach(() => {
                 server.removeAllListeners("request");
             });
 
-            test("passes method to the request handler", async() => {
-                const sampleMethod = "GET";
+            test("Passes the value of :method to request.method", async() => {
+                const testMethod = "GET";
 
-                const sampleUrl = "/customers/543/favourites";
-
-                let capturedRequest: Http2ServerRequest;
-
-                server.on("request", (request: Http2ServerRequest, response: Http2ServerResponse) => {
-                    capturedRequest = Object.create(request);
-
+                server.on("request", (request, response) => {
                     response.end();
+
+                    expect(request.method).toEqual(testMethod);
                 });
 
-                return httpCheck.send({
-                    ":method": sampleMethod,
-                    ":path": sampleUrl,
-                })
-                    .then(() => {
-                        expect(capturedRequest.method).toEqual(sampleMethod);
-                    });
+                await httpCheck.send({
+                    ":method": testMethod,
+                    ":path": "/items/dried-mango",
+                });
             });
 
-            test("passes url to the request handler", async() => {
-                const sampleMethod = "GET";
+            test("Passes the value of :url to request.url", async() => {
+                const testUri = "/items/dried-mango";
 
-                const sampleUrl = "/customers/543/favourites";
-
-                let capturedRequest: Http2ServerRequest;
-
-                server.on("request", (request: Http2ServerRequest, response: Http2ServerResponse) => {
-                    capturedRequest = Object.create(request);
-
+                server.on("request", (request, response) => {
                     response.end();
+
+                    expect(request.url).toEqual(testUri);
                 });
 
-                return httpCheck.send({
-                    ":method": sampleMethod,
-                    ":path": sampleUrl,
-                })
-                    .then(() => {
-                        expect(capturedRequest.url).toEqual(sampleUrl);
-                    });
+                await httpCheck.send({
+                    ":method": "DELETE",
+                    ":path": testUri,
+                });
             });
 
-            test("passes url with query parameters to the request handler", async() => {
-                const sampleMethod = "GET";
+            test("Passes the value of :url to request.url preserving unencoded characters", async() => {
+                const testUri = "/items?q=dried fruit";
 
-                const sampleUrl = "/customers/543/favourites?q=dried fruit";
-
-                let capturedRequest: Http2ServerRequest;
-
-                server.on("request", (request: Http2ServerRequest, response: Http2ServerResponse) => {
-                    capturedRequest = Object.create(request);
-
+                server.on("request", (request, response) => {
                     response.end();
+
+                    expect(request.url).toEqual(testUri);
                 });
 
-                return httpCheck.send({
-                    ":method": sampleMethod,
-                    ":path": sampleUrl,
-                })
-                    .then(() => {
-                        expect(capturedRequest.url).toEqual(sampleUrl);
-                    });
+                await httpCheck.send({
+                    ":method": "GET",
+                    ":path": testUri,
+                });
             });
 
-            test("passes encoded url with query parameters to the request handler", async() => {
-                const sampleMethod = "GET";
+            test("Passes the value of :url to request.url preserving encoded characters", async() => {
+                const testUri = encodeURI("/items?q=dried fruit");
 
-                const sampleUrl = encodeURI("/customers/543/favourites?text=dried fruit");
-
-                let capturedRequest: Http2ServerRequest;
-
-                server.on("request", (request: Http2ServerRequest, response: Http2ServerResponse) => {
-                    capturedRequest = Object.create(request);
-
+                server.on("request", (request, response) => {
                     response.end();
+
+                    expect(request.url).toEqual(testUri);
                 });
 
-                return httpCheck.send({
-                    ":method": sampleMethod,
-                    ":path": sampleUrl,
-                })
-                    .then(() => {
-                        expect(capturedRequest.url).toEqual(sampleUrl);
-                    });
+                await httpCheck.send({
+                    ":method": "GET",
+                    ":path": testUri,
+                });
             });
 
-            test("passes headers to the request handler", async() => {
-                const sampleMethod = "GET";
+            test("Passes headers to request.headers", async() => {
+                const testHeaderAccept = "application/json";
 
-                const sampleUrl = "/customers/543/favourites";
+                const testHeaderAcceptEncoding = "gzip deflate";
 
-                const sampleHeaderAccept = "application/json";
-
-                const sampleHeaderAcceptEncoding = "gzip deflate";
-
-                let capturedRequest: Http2ServerRequest;
-
-                server.on("request", (request: Http2ServerRequest, response: Http2ServerResponse) => {
-                    capturedRequest = Object.create(request);
-
+                server.on("request", (request, response) => {
                     response.end();
+
+                    expect(request.headers.accept).toEqual(testHeaderAccept);
+
+                    expect(request.headers["accept-encoding"]).toEqual(testHeaderAcceptEncoding);
                 });
 
-                return httpCheck.send({
-                    ":method": sampleMethod,
-                    ":path": sampleUrl,
-                    "accept": sampleHeaderAccept,
-                    "accept-encoding": sampleHeaderAcceptEncoding,
-                })
-                    .then(() => {
-                        expect(capturedRequest.headers.accept).toEqual(sampleHeaderAccept);
-
-                        expect(capturedRequest.headers["accept-encoding"]).toEqual(sampleHeaderAcceptEncoding);
-                    });
+                await httpCheck.send({
+                    ":method": "GET",
+                    ":path": "/items/dried-mango",
+                    "accept": testHeaderAccept,
+                    "accept-encoding": testHeaderAcceptEncoding,
+                });
             });
 
-            test("passes data to the request handler", async() => {
-                const sampleMethod = "POST";
-
-                const sampleUrl = "/customers/543/favourites";
-
-                const sampleData = JSON.stringify({
-                    productId: 2558,
+            test("Passes data to request.stream", async() => {
+                const testData = JSON.stringify({
+                    "productId": 2558,
                 });
 
-                let capturedData = "";
+                server.on("request", (request, response) => {
+                    let chunks = "";
 
-                server.on("request", (request: Http2ServerRequest, response: Http2ServerResponse) => {
                     request.stream.on("data", (chunk) => {
-                        capturedData += chunk;
+                        chunks += chunk;
                     });
 
-                    response.end();
+                    request.stream.on("end", () => {
+                        response.end();
+
+                        expect(chunks).toEqual(testData);
+                    });
                 });
 
-                return httpCheck.send({
-                    ":method": sampleMethod,
-                    ":path": sampleUrl,
-                }, sampleData)
-                    .then(() => {
-                        expect(capturedData).toEqual(sampleData);
-                    });
+                await httpCheck.send({
+                    ":method": "POST",
+                    ":path": "/customer/543/favorites",
+                }, testData);
             });
 
-            test("returns status code and data set in the request handler", async() => {
-                const sampleMethod = "GET";
-
-                const sampleUrl = "/customers/543/favourites/1";
-
-                const sampleStatusCode = 200;
-
-                const sampleResponseData = JSON.stringify({
+            test("Returns response status code and body", async() => {
+                const testResponseBody = JSON.stringify({
                     customerId: 543,
                     key: 1,
                     productId: 2558,
                 });
 
-                server.on("request", (request: Http2ServerRequest, response: Http2ServerResponse) => {
-                    response.statusCode = sampleStatusCode;
+                const testResponseStatusCode = 200;
 
-                    response.end(sampleResponseData);
+                server.on("request", (request, response) => {
+                    response.statusCode = testResponseStatusCode;
+
+                    response.end(testResponseBody);
                 });
 
-                return httpCheck.send({
-                    ":method": sampleMethod,
-                    ":path": sampleUrl,
-                })
-                    .then((response) => {
-                        expect(response)
-                            .toHaveProperty("headers.:status", sampleStatusCode);
+                const response = await httpCheck.send({
+                    ":method": "GET",
+                    ":path": "/customer/543/favorites",
+                });
 
-                        expect(response)
-                            .toHaveProperty("data", sampleResponseData);
-                    });
+                expect(response).toHaveProperty("data", testResponseBody);
+
+                expect(response).toHaveProperty("headers.:status", testResponseStatusCode);
             });
         });
     });
