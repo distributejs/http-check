@@ -4,9 +4,12 @@ import {
     Http2SecureServer,
     IncomingHttpHeaders,
     OutgoingHttpHeaders,
+    Http2Server,
 } from "http2";
 
 import { AddressInfo } from "net";
+
+import { Server as TlsServer } from "tls";
 
 interface HttpCheckResponse {
     data: string;
@@ -17,9 +20,9 @@ interface HttpCheckResponse {
 export class HttpCheck {
     protected clientSession: ClientHttp2Session;
 
-    protected server: Http2SecureServer;
+    protected server: Http2SecureServer | Http2Server;
 
-    constructor(server: Http2SecureServer) {
+    constructor(server: Http2SecureServer | Http2Server) {
         this.server = server;
     }
 
@@ -100,11 +103,15 @@ export class HttpCheck {
             this.server.listen(() => {
                 const addressInfo = this.server.address() as AddressInfo;
 
+                const protocol = this.server instanceof TlsServer ? "https" : "http";
+
+                const options = this.server instanceof TlsServer ? {
+                    rejectUnauthorized: false,
+                } : {};
+
                 this.clientSession = connect(
-                    "https://localhost:" + addressInfo.port,
-                    {
-                        rejectUnauthorized: false,
-                    },
+                    protocol + "://localhost:" + addressInfo.port,
+                    options,
                     () => {
                         resolve();
                     },
