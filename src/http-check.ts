@@ -39,16 +39,15 @@ export class HttpCheck {
         });
     }
 
-    public async send(headers: OutgoingHttpHeaders, data?: string): Promise<HttpCheckResponse>;
-    public async send(headers: OutgoingHttpHeaders): Promise<HttpCheckResponse> {
+    public async send(headers: OutgoingHttpHeaders, data?: string): Promise<HttpCheckResponse> {
         let requestData: string;
 
-        let endStream: boolean = true;
+        let endStream = true;
 
-        if (arguments.length >= 2) {
-            switch (typeof arguments[1]) {
+        if (data) {
+            switch (typeof data) {
                 case "string":
-                    requestData = arguments[1];
+                    requestData = data;
 
                     endStream = false;
 
