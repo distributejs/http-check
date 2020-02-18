@@ -9,7 +9,7 @@ import { join } from "path";
 import { HttpCheck } from "../http-check";
 
 describe("Class HttpCheck", () => {
-    describe("Provided a server that is of type Http2SecureServer", () => {
+    describe("Provided a server that is an instance of Http2SecureServer", () => {
         let httpCheck: HttpCheck;
 
         let server: Http2SecureServer;
@@ -177,7 +177,7 @@ describe("Class HttpCheck", () => {
         });
     });
 
-    describe("Provided a server that is of type Http2SecureServer, with allowHTTP1 option set to true, and http2Client set to false", () => {
+    describe("Provided a server that is an instance of Http2SecureServer, with allowHTTP1 option set to true, and http2Client set to false", () => {
         let httpCheck: HttpCheck;
 
         let server: Http2SecureServer;
@@ -345,8 +345,7 @@ describe("Class HttpCheck", () => {
             });
         });
     });
-
-    describe("Provided a server that is of type Http2Server", () => {
+    describe("Provided a server that is an instance of Http2Server", () => {
         let httpCheck: HttpCheck;
 
         let server: Http2Server;
@@ -511,7 +510,7 @@ describe("Class HttpCheck", () => {
         });
     });
 
-    describe("Provided a server that is of type Http2Server, and http2Client set to false", () => {
+    describe("Provided a server that is an instance of Http2Server, and http2Client set to false", () => {
         describe("On calling start", () => {
             test("Throws an error", async() => {
                 const server: Http2Server = createServer({});
