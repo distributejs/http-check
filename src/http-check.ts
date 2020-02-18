@@ -8,7 +8,7 @@ import {
     IncomingHttpStatusHeader,
 } from "http2";
 
-import { request as httpsRequest } from "https";
+import { request as httpsRequest, RequestOptions } from "https";
 
 import { AddressInfo } from "net";
 
@@ -79,7 +79,7 @@ export class HttpCheck {
             }
         }
 
-        return this.clientSession ? this.sendHttp2Request(headers, requestData, endStream) : this.sendHttp1Request(headers, requestData, endStream);
+        return this.clientSession ? this.sendHttp2Request(headers, endStream, requestData) : this.sendHttp1Request(headers, requestData);
     }
 
     public async start(): Promise<void> {
@@ -119,19 +119,19 @@ export class HttpCheck {
         });
     }
 
-    protected sendHttp1Request(headers, requestData, endStream): Promise<HttpCheckResponse> {
+    protected sendHttp1Request(headers: OutgoingHttpHeaders, requestData?: string): Promise<HttpCheckResponse> {
         return new Promise((resolve, reject) => {
             const addressInfo = this.server.address() as AddressInfo;
 
             const protocol = this.server instanceof TlsServer ? "https:" : "http:";
 
-            const path = headers[":path"];
+            const path = headers[":path"] as string;
 
             delete headers[":method"];
 
             delete headers[":path"];
 
-            const options = {
+            const options: RequestOptions = {
                 headers,
                 path,
                 port: addressInfo.port,
@@ -166,7 +166,7 @@ export class HttpCheck {
         });
     }
 
-    protected sendHttp2Request(headers, requestData, endStream): Promise<HttpCheckResponse> {
+    protected sendHttp2Request(headers: OutgoingHttpHeaders, endStream: boolean, requestData?: string): Promise<HttpCheckResponse> {
         return new Promise((resolve, reject) => {
             const request = this.clientSession.request(headers, {
                 endStream,
