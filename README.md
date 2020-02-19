@@ -4,14 +4,24 @@
 ## Introduction
 DistributeJS http-check is a utility for checking HTTP server requests and responses in Node.js.
 
-## Supported server types
+## Supported servers and clients
 DistributeJS http-check currently supports checks on:
-- Http2SecureServer
+- Http2SecureServer with HTTP/2 client
+- Http2SecureServer with HTTP/1.x client
+- Http2Server with HTTP/2 client
+- Server from "http" module with HTTP/1.x client
+- Server from "https" module with HTTP/1.x client
 
 ## Usage
-Create a new instance of HttpCheck, passing an instance of Http2SecureServer, like so:
+Create a new instance of HttpCheck, passing the server as argument:
 ```
 const httpCheck = new HttpCheck(server);
+```
+
+By default, the client is set to HTTP/2. To change it to HTTP/1.x pass `false` in the second argument:
+
+```
+const httpCheck = new HttpCheck(server, false);
 ```
 
 Start listening for connections and connect to the server by calling:
@@ -77,27 +87,25 @@ import { HttpCheck } from "@distributejs/http-check";
 
 ```
 
-### Checks with Http2SecureServer in Mocha + Chai
+### Checks with Http2SecureServer in Jest
 ```
-import * as chai from "chai";
-
 import { readFileSync } from "fs";
 
-import { createSecureServer } from "http2";
+import { createSecureServer, Http2SecureServer } from "http2";
 
 import { HttpCheck } from "@distributejs/http-check";
 
 import { parseParameters } from "path-to-tested-module";
 
-describe("CustomerFavourites", () => {
+describe("CustomerFavorites", () => {
     let httpCheck: HttpCheck;
 
     let server: Http2SecureServer;
 
-    before(async () => {
-        server = createSecureServer({
-            cert: readFileSync("path-to-cert-file"),
-            key: readFileSync("path-to-key-file"),
+    beforeAll(async() => {
+        server = createHttp2SecureServer({
+            cert: "path-to-cert-file",
+            key: "path-to-key-file",
         });
 
         httpCheck = new HttpCheck(server);
@@ -105,61 +113,126 @@ describe("CustomerFavourites", () => {
         await httpCheck.start();
     });
 
-    after(async () => {
+    afterAll(async() => {
         await httpCheck.end();
     });
 
-    describe("When a GET request is made", () => {
+    describe("On receiving a request", () => {
         afterEach(() => {
             server.removeAllListeners("request");
         });
 
-        it("parses incoming query parameters", () => {
-            const method = "GET";
-
-            const url = "/customers/543/favourites";
-
-            // Sample parsed parameters
-            const sampleParsedParameters = {};
-
-            let parsedParameters;
+        test("Parses incoming query parameters", async() => {
+            // Test parsed parameters
+            const testParsedParameters = {
+                "customerId": 543,
+            };
 
             server.on("request", (request, response) => {
                 // Collect output from logic performed while processing the request.
-                parsedParameters = parseParameters(request);
+                const parsedParameters = parseParameters(request);
 
                 response.end();
+
+                expect(parsedParameters).toEqual(testParsedParameters);
             });
 
-            return httpCheck.send({
-                ":method": method,
-                ":path": url,
-            })
-                .then(() => {
-                    chai.expect(parsedParameters).eq(sampleParsedParameters);
-                });
+            await httpCheck.send({
+                ":method": "GET",
+                ":path": "/customers/543/favourites",
+            });
         });
 
-        it("responds with a collection of CustomerFavouriteItem objects", () => {
-            const method = "GET";
-
-            const url = "/customers/543/favourites";
-
-            // Sample response
-            const sampleResponse = {};
-
-            server.on("request", (request, response) => {
-                response.end(sampleResponse);
+        test("Responds with a collection of CustomerFavoriteItem objects", async() => {
+            // Test response body
+            const testResponseBody = JSON.stringify({
+                favorites: [],
             });
 
-            return httpCheck.send({
-                ":method": method,
-                ":path": url,
-            })
-                .then((response) => {
-                    chai.expect(response)
-                        .property("data", sampleResponse);
-                });
+            server.on("request", (request, response) => {
+                response.end(testResponseBody);
+            });
+
+            const response = await httpCheck.send({
+                ":method": "GET",
+                ":path": "/customers/543/favourites",
+            });
+
+            expect(response).toHaveProperty("data", testResponseBody);
+        });
+    });
+});
+```
+
+### Checks with Server from "http" module in Jest
+```
+import { readFileSync } from "fs";
+
+import { createServer, Server } from "http";
+
+import { HttpCheck } from "@distributejs/http-check";
+
+import { parseParameters } from "path-to-tested-module";
+
+describe("CustomerFavorites", () => {
+    let httpCheck: HttpCheck;
+
+    let server: Server;
+
+    beforeAll(async() => {
+        server = createServer();
+
+        httpCheck = new HttpCheck(server, false);
+
+        await httpCheck.start();
+    });
+
+    afterAll(async() => {
+        await httpCheck.end();
+    });
+
+    describe("On receiving a request", () => {
+        afterEach(() => {
+            server.removeAllListeners("request");
+        });
+
+        test("Parses incoming query parameters", async() => {
+            // Test parsed parameters
+            const testParsedParameters = {
+                "customerId": 543,
+            };
+
+            server.on("request", (request, response) => {
+                // Collect output from logic performed while processing the request.
+                const parsedParameters = parseParameters(request);
+
+                response.end();
+
+                expect(parsedParameters).toEqual(testParsedParameters);
+            });
+
+            await httpCheck.send({
+                ":method": "GET",
+                ":path": "/customers/543/favourites",
+            });
+        });
+
+        test("Responds with a collection of CustomerFavoriteItem objects", async() => {
+            // Test response body
+            const testResponseBody = JSON.stringify({
+                favorites: [],
+            });
+
+            server.on("request", (request, response) => {
+                response.end(testResponseBody);
+            });
+
+            const response = await httpCheck.send({
+                ":method": "GET",
+                ":path": "/customers/543/favourites",
+            });
+
+            expect(response).toHaveProperty("data", testResponseBody);
         });
     });
 });
