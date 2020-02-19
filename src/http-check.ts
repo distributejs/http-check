@@ -1,14 +1,8 @@
-import {
-    ClientHttp2Session,
-    connect,
-    Http2SecureServer,
-    IncomingHttpHeaders,
-    OutgoingHttpHeaders,
-    Http2Server,
-    IncomingHttpStatusHeader,
-} from "http2";
+import { request as httpRequest, Server as HttpServer } from "http";
 
-import { request as httpsRequest, RequestOptions } from "https";
+import { ClientHttp2Session, connect, Http2SecureServer, Http2Server, IncomingHttpHeaders, IncomingHttpStatusHeader, OutgoingHttpHeaders } from "http2";
+
+import { request as httpsRequest, RequestOptions, Server as HttpsServer } from "https";
 
 import { AddressInfo } from "net";
 
@@ -25,9 +19,9 @@ export class HttpCheck {
 
     protected readonly http2Client: boolean;
 
-    protected readonly server: Http2SecureServer | Http2Server;
+    protected readonly server: HttpServer | HttpsServer | Http2SecureServer | Http2Server;
 
-    constructor(server: Http2SecureServer | Http2Server, http2Client = true) {
+    constructor(server: HttpServer | HttpsServer | Http2SecureServer | Http2Server, http2Client = true) {
         this.server = server;
 
         this.http2Client = http2Client;
@@ -83,10 +77,13 @@ export class HttpCheck {
     }
 
     public async start(): Promise<void> {
-        if (!(this.http2Client
-            || this.server instanceof TlsServer)) {
-            throw new Error("Only HTTPS servers are supported for HTTP1.x");
+        if (!this.http2Client) {
+            if (this.server.constructor.name == "Http2Server") {
+                throw new Error("Use of HTTP1.x client is not supported with a server that is an instance of Http2Server");
+            }
         }
+
+        const a = this.server.constructor;
 
         if (this.server.listening) {
             this.server.close();
@@ -139,7 +136,9 @@ export class HttpCheck {
                 rejectUnauthorized: false,
             };
 
-            const request = httpsRequest(options, (response) => {
+            const requestFn = this.server instanceof TlsServer ? httpsRequest : httpRequest;
+
+            const request = requestFn(options, (response) => {
                 let responseData = "";
 
                 const responseHeaders: IncomingHttpHeaders & IncomingHttpStatusHeader = response.headers;
