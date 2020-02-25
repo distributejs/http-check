@@ -1,0 +1,21 @@
+{
+    "env": {
+        "node": true
+    },
+    "extends": [
+        "eslint:recommended"
+    ],
+    "parserOptions": {
+        "ecmaVersion": 6
+    },
+    "rules": {
+        "comma-spacing": "warn",
+        "eol-last": "warn",
+        "indent": ["warn", 4, { "SwitchCase": 1 }],
+        "no-trailing-spaces": "warn",
+        "space-before-function-paren": ["warn", "never"],
+        "space-before-blocks": "warn",
+        "space-in-parens": "warn",
+        "space-infix-ops": "warn"
+    }
+}
