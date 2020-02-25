@@ -35,9 +35,9 @@ workflows:
   test-and-publish:
     jobs:
     - test:
-      filters:
-        tags:
-          only: /.*/
+        filters:
+          tags:
+            only: /.*/
     - publish:
         requires:
           - test
