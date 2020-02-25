@@ -1,6 +1,6 @@
 {
     "name": "@distributejs/http-check",
-    "version": "0.2.0",
+    "version": "0.2.1",
     "description": "Utility for checking HTTP server requests and responses in Node.js",
     "keywords": [
         "http",
