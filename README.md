@@ -89,8 +89,6 @@ import { HttpCheck } from "@distributejs/http-check";
 
 ### Checks with Http2SecureServer in Jest
 ```
-import { readFileSync } from "fs";
-
 import { createSecureServer, Http2SecureServer } from "http2";
 
 import { HttpCheck } from "@distributejs/http-check";
