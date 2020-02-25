@@ -89,6 +89,8 @@ import { HttpCheck } from "@distributejs/http-check";
 
 ### Checks with Http2SecureServer in Jest
 ```
+import { readFileSync } from "fs";
+
 import { createSecureServer, Http2SecureServer } from "http2";
 
 import { HttpCheck } from "@distributejs/http-check";
@@ -102,8 +104,8 @@ describe("CustomerFavorites", () => {
 
     beforeAll(async() => {
         server = createHttp2SecureServer({
-            cert: "path-to-cert-file",
-            key: "path-to-key-file",
+            cert: readFileSync("path-to-cert-file"),
+            key: readFileSync("path-to-key-file"),
         });
 
         httpCheck = new HttpCheck(server);
@@ -164,8 +166,6 @@ describe("CustomerFavorites", () => {
 
 ### Checks with Server from "http" module in Jest
 ```
-import { readFileSync } from "fs";
-
 import { createServer, Server } from "http";
 
 import { HttpCheck } from "@distributejs/http-check";
