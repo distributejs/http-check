@@ -1,5 +1,5 @@
 # DistributeJS http-check
-[![CircleCI](https://circleci.com/gh/distributejs/http-check.svg?style=svg)](https://circleci.com/gh/distributejs/http-check)
+![Test](https://github.com/distributejs/http-check/workflows/Test/badge.svg)
 
 ## Introduction
 DistributeJS http-check is a utility for checking HTTP server requests and responses in Node.js.
