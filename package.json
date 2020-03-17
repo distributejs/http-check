@@ -33,7 +33,7 @@
         "eslint": "^6.8.0",
         "jest": "^25.1.0",
         "selfsigned": "^1.10.7",
-        "ts-jest": "^25.2.0",
+        "ts-jest": "^25.2.1",
         "typescript": "^3.7.4"
     },
     "scripts": {
