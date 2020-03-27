@@ -47,7 +47,7 @@ describe("Class HttpCheck", () => {
             });
 
             test("Passes the value of :method to request.method", async() => {
-                const testMethod = "GET";
+                const testMethod = "PUT";
 
                 server.on("request", (request, response) => {
                     response.end();
@@ -381,7 +381,7 @@ describe("Class HttpCheck", () => {
             });
 
             test("Passes the value of :method to request.method", async() => {
-                const testMethod = "GET";
+                const testMethod = "PUT";
 
                 server.on("request", (request, response) => {
                     response.end();
@@ -562,7 +562,7 @@ describe("Class HttpCheck", () => {
             });
 
             test("Passes the value of :method to request.method", async() => {
-                const testMethod = "GET";
+                const testMethod = "PUT";
 
                 server.on("request", (request: IncomingMessage, response: ServerResponse) => {
                     response.end();
@@ -727,7 +727,7 @@ describe("Class HttpCheck", () => {
             });
 
             test("Passes the value of :method to request.method", async() => {
-                const testMethod = "GET";
+                const testMethod = "PUT";
 
                 server.on("request", (request: IncomingMessage, response: ServerResponse) => {
                     response.end();
