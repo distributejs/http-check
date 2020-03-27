@@ -83,8 +83,6 @@ export class HttpCheck {
             }
         }
 
-        const a = this.server.constructor;
-
         if (this.server.listening) {
             this.server.close();
         }
