@@ -124,12 +124,15 @@ export class HttpCheck {
 
             const path = headers[":path"] as string;
 
+            const method = headers[":method"] as string;
+
             delete headers[":method"];
 
             delete headers[":path"];
 
             const options: RequestOptions = {
                 headers,
+                method,
                 path,
                 port: addressInfo.port,
                 protocol,
