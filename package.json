@@ -21,7 +21,8 @@
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
     "files": [
-        "dist"
+        "dist",
+        "!**/__tests__/"
     ],
     "dependencies": {
         "@types/node": "^12.12.24"
